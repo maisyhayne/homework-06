@@ -1,0 +1,35 @@
+#headband{
+    text-align: center;
+    font-size: xx-large;
+    background-color: black;
+    color: whitesmoke;
+}
+
+
+#searchForCity{
+    border: thin;
+    border-color: violet;
+    border-style: double;
+    
+}
+
+#savedCities{
+    border: thin;
+    border-color: violet;
+    border-style: double;
+}
+#displayCurrentCity{
+    border: thin;
+    border-color: violet;
+    border-style: double;
+    
+    
+}
+
+
+#fiveDayForecast{
+    border: thin;
+    border-color: violet;
+    border-style: double
+    
+}

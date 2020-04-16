@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- LINK BOOTSTRAP -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<!-- LINK CSS FILE -->
+	<link rel="stylesheet" href="assets/style.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<!-- WEATHER DASHBOARD BANNER -->
+	<div id="headband">
+		WEATHER DASHBOARD
+	</div>
+	
+	<!-- DIVIDE THE PAGE INTO SEARCH AND DISPLAY -->
+	<div id="pageDivide" class="container-fluid">
+		<!-- ROW TO MAKE A COLUM FOR SEARCH AND DISPLAY -->
+		<div class="row">
+			<!--SEARCH DIV CONTAINER WITH 2 DIVS: CITY SEARCH SAVED CITIES BUTTONS -->
+			<div id="searchDiv" class="col-3">
+				
+				<!-- DISPLAY TEXT AND SEARCH BOX -->
+				<div id="searchForCity">
+					<h1>Search City</h1>
+					
+					<!-- FORM TO GET CITY -->
+					<form>
+						<div class="form-group">
+							<label for="citySearch">Search for a city</label>
+							<input type="text" class="form-control" id="searchedCity">
+							
+							<!-- BUTTON TO SEARCH -->
+							<button type="submit" class="btn btn-primary">Search</button>	
+							
+						</div>
+						
+					</form>
+				</div>
+				
+				<!-- DISPLAY SAVED CITIES AND CLICK HANDLER -->
+				<div id="savedCities">
+					<h1>Saved Cities</h1>
+				</div>
+			</div>
+			
+			
+			<!-- DISPLAY DIV TO SHOW CURRENT CITY AND 5 DAY FORECAST -->
+			<div id="displayDiv" class="col-9">
+				
+				<!-- DISPLAY CURRENT CITY STATS -->
+				<div id="displayCurrentCity">
+					<h1>Display Current City</h1>
+				</div>
+				
+				<!-- DISPLAY 5 CARDS OF 5 DAY FORECAST -->
+				<div id="fiveDayForecast">
+					<h1>5 day forecast</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- JQUERY LINK -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="assets/script.js"></script>
+	
+</body>
+</html>
