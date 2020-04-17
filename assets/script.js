@@ -1,6 +1,6 @@
 // BASE URL TO ADD CITY NAME AND API KEY
-var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+ cityName +"&apikey=" + APIKey;
-var forecastURL= "https://api.openweathermap.org/data/2.5/forecast?q="+cityName +"&appid="+APIKey
+// var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+ cityName +"&apikey=" + APIKey;
+// var forecastURL= "https://api.openweathermap.org/data/2.5/forecast?q="+cityName +"&appid="+APIKey
 /*
 The 5-Day Forecast actually breaks down each day's forecast into hour blocks of 3, which will be 
 really hard to parse. The function below will solve the problem: 
@@ -12,23 +12,7 @@ really hard to parse. The function below will solve the problem:
 4. Then loop through that array to create the 5 blue blocks at the bottom
 5. You're welcome.  :)
 // */ 
-var forecastArray=[];
-function getForecastForEachDay(listOfForecasts){
-    var currentDate = "";
-    for(var i=0; i<listOfForecasts.length; i++){
-        // We want to capture one weather object for each day in the list. Once we've captured that
-        // object, we can ignore all other objects for the same day
-        var dateOfListItem = listOfForecasts[i].dt_txt.split(" ")[0];
-        if( dateOfListItem !== currentDate ){
-            // We need to extract just the date part and ignore the time
-            currentDate = dateOfListItem;
-            // Push this weather object to the forecasts array
-            if( forecastArray.length < 5 ){
-                forecastArray.push(listOfForecasts[i]);
-            }
-        }
-    }
-}
+
 // MY API KEY
 var APIKey  = "166a433c57516f51dfab1f7edaed8413"
 // CITY NAME GOTTEN FROM SEARCH 
@@ -144,59 +128,136 @@ function renderButtons(){
 
 // CLICK HANDLER FOR THE SAVED CITY BUTTONS
 $("#savedCities").on("click", "button",function(){
+    
     // SETTING THE CURRENT DISPLAY CITY TO CLICKED TARGET
     buttonClicked=$(this).text();
     console.log(buttonClicked)
     
     // INSERT THE CLICKED CITY NAME INTO THE API CALL
-    queryURL="https:api.openweathermap.org/data/2.5/weather?q="+buttonClicked+"&apikey=166a433c57516f51dfab1f7edaed8413";   
+    weatherURL="https:api.openweathermap.org/data/2.5/weather?q="+buttonClicked+"&apikey=166a433c57516f51dfab1f7edaed8413";   
+    forecastURL="https://api.openweathermap.org/data/2.5/forecast?q="+buttonClicked +"&appid=166a433c57516f51dfab1f7edaed8413"
     
-    // AJAX
+    // AJAX CALL FOR WEATHER
     $.ajax({
+        
         // URL WITH MY KEY  
-        url: queryURL,
+        url: weatherURL,
+        
         // METHOD IS JUST "GET" INFORMATION FROM API 
         method: "GET",
         
     }).then(function(response){
         updateWeather(response);
     })
+    // AJAX CALL FOR 5 DAY FORECAST
+    $.ajax({
+        
+        // URL WITH MY KEY  
+        url: forecastURL,
+        
+        // METHOD IS JUST "GET" INFORMATION FROM API 
+        method: "GET",
+        
+    }).then(function(response){
+        listResponse=response.list;
+        getForecastForEachDay(listResponse);
+        updateForecast(forecastArray);
+    })
 })
 
 // FUNCITON TO UPDATE THE DISPLAY WITH CURRENT CITY
 function updateWeather(response){
+    
     // CLEAR THE DIV TO DISPLAY NEW INFO
     $("#displayCurrentCity").empty();
-
+    
     console.log(response);
-
-
+    
+    
     // CITY NAME
     displayName=$("<h2>");
     displayName.text("City :" + response.name);
     $("#displayCurrentCity").append(displayName);
-
+    
     // WIND SPEED
     displayWind=$("<h3>");
     displayWind.text("Wind Speed: " + response.wind.speed+"mph");
     $("#displayCurrentCity").append(displayWind);
-
+    
     // HUMIDITY
     displayHumid=$("<h3>");
     displayHumid.text("Humidity: " +response.main.humidity +"%");
     $("#displayCurrentCity").append(displayHumid);
-
-    // TEMPERATURE
-    // GET TEMP IN K
+    
+    // TEMPERATURE, GET TEMP IN K, CONVERT TO F
     responseK=response.main.temp;
-    // CONVERT TO F
     responseConvert=parseInt((response.main.temp)-273.15)*1.8+32;
     displayTemp=$("<h3>");
     displayTemp.text("Temperature: "+ responseConvert+"\xB0"+"F");
     $("#displayCurrentCity").append(displayTemp);
-
+    
 }
 
-function updateForecast(response){
+function updateForecast(forecastArray){
+    for (var i = 0; i < forecastArray.length; i++) {
+        console.log(forecastArray[i]);
+        createCard(forecastArray[i]);
+    }
+    // <div class="card" style="width: 18rem;">
+    // <div class="card-body">
+    // <h5 class="card-title">Card title</h5>
+    // <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+    // <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    // </div>
+    // </div>
+}
 
+
+var forecastArray=[];
+function getForecastForEachDay(listOfForecasts){
+    var currentDate = "";
+    for(var i=0; i<listOfForecasts.length; i++){
+        // We want to capture one weather object for each day in the list. Once we've captured that
+        // object, we can ignore all other objects for the same day
+        var dateOfListItem = listOfForecasts[i].dt_txt.split(" ")[0];
+        if( dateOfListItem !== currentDate ){
+            // We need to extract just the date part and ignore the time
+            currentDate = dateOfListItem;
+            // Push this weather object to the forecasts array
+            if( forecastArray.length < 5 ){
+                forecastArray.push(listOfForecasts[i]);
+            }
+        }
+    }
+}
+
+
+function createCard(forecastDay) {
+    console.log("creating card");
+    card=$("<div>").addClass("card");
+    cardBody=$("<div>").addClass("card-body");
+    // DATE
+    cardDate=$("<h5>").addClass("card-title")
+    cardDate.text(forecastDay.sys.dt_txt);
+    // ICON
+    cardIcon=$("<h5>").addClass("card-text")
+    cardIcon.text(forecastDay.weather.icon);
+    // TEMP
+    cardTemp=$("<h5>").addClass("card-text")
+    cardTemp.text(forecastDay.main.temp);
+    // HUMID
+    cardHumid=$("<h5>").addClass("card-text")
+    cardHumid.text(forecastDay.main.humidity);
+
+    // APPEND THE FORECAST ELEMENTS TO THE CARD BODY
+    cardBody.append(cardDate);
+    cardBody.append(cardIcon);
+    cardBody.append(cardTemp);
+    cardBody.append(cardHumid);
+    
+    // APPEND THE CARDBODY TO THE CARD
+    card.append(cardBody);
+
+    $("#fivedayForecast").append(card);
+    console.log("Appending card");
 }
