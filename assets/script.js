@@ -35,17 +35,7 @@ var APIKey  = "166a433c57516f51dfab1f7edaed8413"
 var cityName="springfield";
 
 
-// AJAX CALL JUST FOR WEATHER
-$.ajax({
-    // URL WITH MY KEY  
-    url: "https:api.openweathermap.org/data/2.5/weather?q=SPRINGFIELD&apikey=166a433c57516f51dfab1f7edaed8413",
-    // METHOD IS JUST "GET" INFORMATION FROM API 
-    method: "GET",
-    
-}).then(function(response){  
-    cityName=response.name;
-    
-});
+
 
 // // AJAX CALL FOR 5 DAY FORECAST
 // function getFiveDayForecast(){
@@ -155,15 +145,58 @@ function renderButtons(){
 // CLICK HANDLER FOR THE SAVED CITY BUTTONS
 $("#savedCities").on("click", "button",function(){
     // SETTING THE CURRENT DISPLAY CITY TO CLICKED TARGET
-    buttonClicked=event.target;
-    console.log(buttonClicked);
-    saveToLocal();
-    getFromLocal();
-    // $("#displayCurrentCity")
+    buttonClicked=$(this).text();
+    console.log(buttonClicked)
+    
+    // INSERT THE CLICKED CITY NAME INTO THE API CALL
+    queryURL="https:api.openweathermap.org/data/2.5/weather?q="+buttonClicked+"&apikey=166a433c57516f51dfab1f7edaed8413";   
+    
+    // AJAX
+    $.ajax({
+        // URL WITH MY KEY  
+        url: queryURL,
+        // METHOD IS JUST "GET" INFORMATION FROM API 
+        method: "GET",
+        
+    }).then(function(response){
+        updateWeather(response);
+    })
 })
 
 // FUNCITON TO UPDATE THE DISPLAY WITH CURRENT CITY
-function updateDisplay(){
-    
-    $("#displayCurrentCity").text("");
+function updateWeather(response){
+    // CLEAR THE DIV TO DISPLAY NEW INFO
+    $("#displayCurrentCity").empty();
+
+    console.log(response);
+
+
+    // CITY NAME
+    displayName=$("<h2>");
+    displayName.text("City :" + response.name);
+    $("#displayCurrentCity").append(displayName);
+
+    // WIND SPEED
+    displayWind=$("<h3>");
+    displayWind.text("Wind Speed: " + response.wind.speed+"mph");
+    $("#displayCurrentCity").append(displayWind);
+
+    // HUMIDITY
+    displayHumid=$("<h3>");
+    displayHumid.text("Humidity: " +response.main.humidity +"%");
+    $("#displayCurrentCity").append(displayHumid);
+
+    // TEMPERATURE
+    // GET TEMP IN K
+    responseK=response.main.temp;
+    // CONVERT TO F
+    responseConvert=parseInt((response.main.temp)-273.15)*1.8+32;
+    displayTemp=$("<h3>");
+    displayTemp.text("Temperature: "+ responseConvert+"\xB0"+"F");
+    $("#displayCurrentCity").append(displayTemp);
+
+}
+
+function updateForecast(response){
+
 }
